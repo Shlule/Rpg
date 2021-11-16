@@ -8,9 +8,18 @@ public:
 	//constructor and destructor
 	RoundManager();
 	~RoundManager();
+	int GetCurrentUnit();
+	int GetNumberUnit();
+	void SetCurrentUnit(int value);
+	void SetNumberUnit(int value);
+	void NewRound();
+	void AddUnit(Unit* unit);
+	void DisplayRoundlist();
+	void RemoveUnit(std::string unit);
+	static std::vector<Unit*> roundList;
 private:
-	int currentUnit;
-	int numberUnit;
-	std::vector<Unit> roundList;
+	int mCurrentUnit;
+	int mNumberUnit;
+	
 };
 

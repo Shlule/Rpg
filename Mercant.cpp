@@ -5,7 +5,7 @@ using namespace std;
 // constructor and Destructor
 
 
-Mercant::Mercant(string name, int maxHp, int str, int dex, int cons, int intel, int wis, int cha):Unit( name, maxHp, str, dex, cons, intel, wis, cha) {
+Mercant::Mercant(string name, int maxHp, int str, int dex, int cons, int intel, int wis, int cha ,uint8_t unitType):Unit( name, maxHp, str, dex, cons, intel, wis, cha,unitType) {
 
 }
 Mercant::Mercant() {}

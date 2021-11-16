@@ -8,21 +8,48 @@
 #include"Mercant.h"
 #include"Item.h"
 #include"Supply.h"
+#include"RoundManager.h"
 #include "Abilitie.h"
 using namespace std;
 
 
 int main()
 {
-    
-    Unit player("jojo", 10,8,14,45,9,18,2);
+    //declarartion d'un roundManager
+    RoundManager roundManager;
+    //
+    Supply healingPotion = Supply("healing potion", 4, EffectSupply::Heal);
+    Abilitie explosion = Abilitie("explosion", map<Effect, int> { {Effect::Burn, 100}, { Effect::Blinded, 100 }}, 0, 4, 6, TargettingType::AllEnemie);
+    Abilitie heal = Abilitie("heal ", map<Effect, int> { {Effect::Cure, 100}}, 0, 1, 6, TargettingType::OneAlly);
+    // sett characters
+    Unit player("jojo", 10,8,40,45,9,18,2,UnitType::Ally);
     Unit* playerPtr = &player;
-    Mercant armurier;
+    Unit gerard("Gerard", 10, 8, 6, 12, 9, 2, 18, UnitType::Ally);
+    Mercant armurier("pascal",10,8,6,12,9,2,18,UnitType::Ennemie);
     Weapon longSword= Weapon("long Sword",20,20,20,12);
+    // on vas setter les point de vie des different personnages
+    player.SetMaxHp(20);
+    player.SetCurrentHp(15);
+    gerard.SetCurrentHp(20);
+    gerard.SetMaxHp(7);
+    armurier.SetMaxHp(20);
+    armurier.SetCurrentHp(20);
     // on vas setter l'inventaire du marchand
     armurier.AddItem(Weapon("woodenstaff", 2, 1, 4, 1.5));
     armurier.AddItem(Item("cailloux", 1, 1, true, true));
-    armurier.AddItem(longSword);
+    armurier.AddItem(longSword); 
+    // on vas donner une potion de soins a tout les Personnages
+    player.AddItem(longSword);
+    armurier.AddItem(healingPotion);
+    gerard.AddItem(healingPotion);
+    player.AddItem(healingPotion);
+
+    // initialisation d'une rencontre
+    //roundManager.AddUnit(&player);
+    //roundManager.AddUnit(&armurier);
+    
+
+   
 
     cout << "what's your name traveller ?";
     string playerName;
@@ -31,10 +58,10 @@ int main()
 
     armurier.AddMoney(40);
     player.AddMoney(50);
-    Supply healingPotion = Supply("healing potion", 4, EffectSupply::Heal);
-    Abilitie explosion = Abilitie("explosion", map<Effect, int> { {Effect::Burn, 100}, { Effect::Blinded, 100 }},0,4);
-    player.AddAbilitie(explosion);
-    player.AddItem(healingPotion);
+   
+    player.LearnAbilitie(explosion);
+    player.LearnAbilitie(heal);
+    
     
 
     /*armurier.SellItem(player, longSword);
@@ -50,10 +77,21 @@ int main()
 
     explosion.ResolutionEffect(Effect::Burn);
     cout << explosion.TestingChanceResolutionEffect(30) << endl;*/
-    player.UseSupply(healingPotion);
-    
-   
+    /*player.UseSupply(healingPotion);
+    player.DisplayUnitType();
+    armurier.DisplayUnitType();
+    gerard.DisplayUnitType();
+    cout << player.GetCurrentHp() << endl;*/
+   /* player.LearnAbilitie(explosion);
+    player.DisplayAbilitieLearned();*/
 
+    /*roundManager.AddUnit(&player);
+    roundManager.AddUnit(&armurier);
+    roundManager.NewRound();
+    roundManager.DisplayRoundlist();
+    player.UseAbility(heal);*/
+    player.Init();
+    
    
 
 

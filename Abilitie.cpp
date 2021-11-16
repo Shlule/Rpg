@@ -12,6 +12,9 @@ Abilitie::Abilitie(string name, std::map<Effect, int> effects ,int manacost, int
 	mDiceCount = diceCount;
 	mDiceFaces = diceFaces;
 	mManacost = manacost;
+	mAbilitieType = abilitieType;
+	mTargetType = targetType;
+
 	
 }
 Abilitie::~Abilitie() {  }
@@ -46,6 +49,9 @@ int Abilitie::DotDamage(int damage) {
 }
 int Abilitie::GetManacost() {
 	return mManacost;
+}
+AbilitieType Abilitie::GetAbilitieType() {
+	return mAbilitieType;
 }
 
 map<Effect, int> Abilitie::GetmEffects() {
@@ -112,6 +118,14 @@ void Abilitie::DispmEffects() {
 	for (iterator = mEffects.begin(); iterator != mEffects.end(); iterator++) {
 		cout << "mon pourcentage effet :  " << iterator->second << "\n";
 	}
+}
+void Abilitie::DisplayAbilitieSumUp() {
+	cout << "this Ability"<<endl;
+}
+
+TargettingType Abilitie::GetTargetType()
+{
+	return mTargetType;
 }
 
 bool Abilitie::TestingChanceResolutionEffect(int value) {

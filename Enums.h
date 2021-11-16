@@ -1,6 +1,6 @@
 #pragma once
 namespace EffectSupply {
-	enum Type {
+	enum Effect {
 		Heal = 1 << 0,
 		MajorHeal = 1 << 1,
 		Cure = 1 << 2,
@@ -8,6 +8,19 @@ namespace EffectSupply {
 		Arcana = 1 << 4,
 		Buff = 1 << 5,
 		Debuff = 1 << 6,
+
+	};
+}
+namespace UnitType {
+	enum Type {
+		Ally=1<<0,
+		Ennemie=1<<1,
+		Player=1<<2,
+		Beast=1<<3,
+		Aberation=1<<4,
+		Fielon=1<<5,
+		Mecha=1<<6,
+		Celeste=1<<7,
 
 	};
 }
@@ -26,6 +39,11 @@ enum class TargettingType {
 	Self, AllAllies, AllEnemie, AllExceptMe, MeAndOneAlly, OneEnnemie, OneAlly, OneUnit,
 };
 enum class AbilitieType {
-	PhysicalMelee, physicalRanged, MagicalMelee, MagicalRanged
+	Offensive,Heal,Defencive,support
+};
+enum class ResistanceType {
+	
+	Poison,Cold,Fire,Bleeding,Stun,Malus,Death
+
 };
 

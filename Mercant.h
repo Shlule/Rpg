@@ -20,7 +20,7 @@ public:
 
 	// constructor and destructor
 	Mercant();
-	Mercant(std::string name, int maxHp, int str, int dex, int cons, int intel, int wis, int cha);
+	Mercant(std::string name, int maxHp, int str, int dex, int cons, int intel, int wis, int cha,std::uint8_t unitType);
 	~Mercant();
 
 	void SellItem(Unit& buyer, Item item);

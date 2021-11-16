@@ -9,11 +9,10 @@ class Abilitie
 {
 public:
 	//constructor and destructor
-	Abilitie(std::string name , std::map<Effect, int> effects,int manacost, int diceCount = 0, int diceFaces = 6, TargettingType targetType = TargettingType::AllExceptMe, AbilitieType abilitieType = AbilitieType::MagicalRanged);
+	Abilitie(std::string name , std::map<Effect, int> effects,int manacost, int diceCount = 0, int diceFaces = 6, TargettingType targetType = TargettingType::AllExceptMe, AbilitieType abilitieType = AbilitieType::Offensive);
 	~Abilitie();
 	
 	int GetChanceEffectWork(Effect choosenEffect);
-
 
 	std::map<Effect, int> GetmEffects();
 	int GetDiceCount();
@@ -24,7 +23,9 @@ public:
 	int ResolutionEffect(Effect effect);
 	int DotDamage(int damage);
 	void DispmEffects();
-	
+	TargettingType GetTargetType();
+	void DisplayAbilitieSumUp();
+	AbilitieType GetAbilitieType();
 
 private:
 	int mManacost;
@@ -32,7 +33,7 @@ private:
 	int mDiceFaces;
 	std::string mName;
 	TargettingType mTargetType;
-	AbilitieType mType;
+	AbilitieType mAbilitieType;
 	// je creer un dictionnaire qui associe un effet a un entier, l'entier represente le pourcentage de chance de faire l'effet;
 	std::map<Effect, int> mEffects;
 };
