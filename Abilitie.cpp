@@ -120,7 +120,58 @@ void Abilitie::DispmEffects() {
 	}
 }
 void Abilitie::DisplayAbilitieSumUp() {
-	cout << "this Ability"<<endl;
+	string target;
+	string effectType;
+	switch (mTargetType)
+	{
+	case TargettingType::Self:
+		target = " self";
+		break;
+	case TargettingType::AllAllies:
+		target = " all allies";
+		break;
+	case TargettingType::AllEnemie:
+		target = " all ennemies";
+		break;
+	case TargettingType::AllExceptMe:
+		target = " all unit expect me";
+		break;
+	case TargettingType::MeAndOneAlly:
+		target = " me and one ally";
+		break;
+	case TargettingType::OneEnnemie:
+		target = " oneEnnemy";
+		break;
+	case TargettingType::OneAlly:
+		target = " one Ally";
+		break;
+	case TargettingType::OneUnit:
+		target = " one Unit";
+		break;
+	default:
+		cout << " no targetting type";
+		break;
+	}
+	switch (mAbilitieType)
+	{
+	case AbilitieType::Offensive:
+		effectType = " dammage";
+		break;
+	case AbilitieType::Heal:
+		effectType = " heal";
+		break;
+	case AbilitieType::Defencive:
+		effectType = " dammage";
+		break;
+	case AbilitieType::support:
+		effectType = " heal";
+		break;
+	default:
+		break;
+	}
+	cout << "this spell cost " << mManacost<< endl;
+	cout << "make " << mDiceCount << " de(s) " << mDiceFaces <<" of "<< effectType << endl;
+	cout << "and targeting" << target << endl;
 }
 
 TargettingType Abilitie::GetTargetType()

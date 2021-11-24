@@ -6,9 +6,11 @@ using namespace std;
 typedef std::map<Effect, int>::iterator it_type;
 
 
-Unit::Unit(string name, int maxHp, int str, int dex, int cons, int intel, int wis, int cha,uint8_t unitType) {
+Unit::Unit(string name, int maxHp,int maxMp, int str, int dex, int cons, int intel, int wis, int cha,uint8_t unitType) {
 	mName = name;
 	mMaxHp = maxHp;
+	mMaxMp = maxMp;
+	mCurrentMp = maxMp;
 	mCurrentHp = maxHp;
 	mStrenth = str;
 	mDexterity = dex;
@@ -140,7 +142,7 @@ void Unit::TakeDammage(int damage) {
 }
 
 void Unit::DisplaySumUp() {
-	cout << mName << "has the following characteristics\n";
+	cout << mName << " you have the following characteristics\n";
 	cout << "Force : " << mStrenth << '\n';
 	cout << "Dexterity : " << mDexterity << '\n';
 	cout << "Constitution : " << mConstitution << '\n';
@@ -343,9 +345,14 @@ vector<Unit*>& Unit::GetAllUnitsFromType(TargettingType type) {
 	for (int u = 0; u < units.size(); u++) {
 		if (units[u]->GetUnitType() & mask) {
 			compatibleUnits.push_back(units[u]);
+			
 		}
+	
 	}
+	
+	cout <<compatibleUnits.size() << endl;
 	return compatibleUnits;
+	
 }
 
 
@@ -373,3 +380,4 @@ void Unit::UseSupply(Supply choosenSupply) {
 		}
 	}
 }
+

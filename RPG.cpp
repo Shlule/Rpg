@@ -12,29 +12,41 @@
 #include "Abilitie.h"
 using namespace std;
 
+Unit player;
+void InitPlayer(Unit& choosenUnit);
 
 int main()
 {
     //declarartion d'un roundManager
     RoundManager roundManager;
-    //
-    Supply healingPotion = Supply("healing potion", 4, EffectSupply::Heal);
+    //InitPlayer(player);
+    
+    InitPlayer(player);
+    
+    
+
+
+
+
+    Supply healingPotion = Supply("healing potion", 4, (EffectSupply::Heal|EffectSupply::Cure),1,8);
     Abilitie explosion = Abilitie("explosion", map<Effect, int> { {Effect::Burn, 100}, { Effect::Blinded, 100 }}, 0, 4, 6, TargettingType::AllEnemie);
-    Abilitie heal = Abilitie("heal ", map<Effect, int> { {Effect::Cure, 100}}, 0, 1, 6, TargettingType::OneAlly);
+    Abilitie heal = Abilitie("heal ", map<Effect, int> { {Effect::Cure, 100}}, 0, 1, 6, TargettingType::OneAlly, AbilitieType::Heal);
+
+    
     // sett characters
-    Unit player("jojo", 10,8,40,45,9,18,2,UnitType::Ally);
+    
     Unit* playerPtr = &player;
-    Unit gerard("Gerard", 10, 8, 6, 12, 9, 2, 18, UnitType::Ally);
-    Mercant armurier("pascal",10,8,6,12,9,2,18,UnitType::Ennemie);
+    Unit gerard("Gerard", 10,5, 8, 6, 12, 9, 2, 18, UnitType::Ally);
+    Mercant armurier("pascal",10,5,8,6,12,9,2,18,UnitType::Ennemie);
     Weapon longSword= Weapon("long Sword",20,20,20,12);
-    // on vas setter les point de vie des different personnages
+     //on vas setter les point de vie des different personnages
     player.SetMaxHp(20);
     player.SetCurrentHp(15);
     gerard.SetCurrentHp(20);
     gerard.SetMaxHp(7);
     armurier.SetMaxHp(20);
     armurier.SetCurrentHp(20);
-    // on vas setter l'inventaire du marchand
+     //on vas setter l'inventaire du marchand
     armurier.AddItem(Weapon("woodenstaff", 2, 1, 4, 1.5));
     armurier.AddItem(Item("cailloux", 1, 1, true, true));
     armurier.AddItem(longSword); 
@@ -43,26 +55,30 @@ int main()
     armurier.AddItem(healingPotion);
     gerard.AddItem(healingPotion);
     player.AddItem(healingPotion);
-
-    // initialisation d'une rencontre
-    //roundManager.AddUnit(&player);
-    //roundManager.AddUnit(&armurier);
-    
-
-   
-
-    cout << "what's your name traveller ?";
-    string playerName;
-    cin >> playerName;
-    cout << "hello " << playerName << " Nice to meet you\n";
-
-    armurier.AddMoney(40);
-    player.AddMoney(50);
-   
+    // learn Abilitie
     player.LearnAbilitie(explosion);
     player.LearnAbilitie(heal);
+
+    // initialisation d'une rencontre
+    roundManager.AddUnit(&player);
+    roundManager.AddUnit(&armurier);
+    roundManager.AddUnit(&gerard);
+    roundManager.NewRound();
+
+   
+    player.UseAbility(heal);
+    //healingPotion.GetEffect();
+    
+
+   
+
+   
+
+    
+   
     
     
+   
 
     /*armurier.SellItem(player, longSword);
     cout<<explosion.GetChanceEffectWork(Effect::Burn)<<endl;
@@ -82,20 +98,47 @@ int main()
     armurier.DisplayUnitType();
     gerard.DisplayUnitType();
     cout << player.GetCurrentHp() << endl;*/
-   /* player.LearnAbilitie(explosion);
-    player.DisplayAbilitieLearned();*/
+    
 
-    /*roundManager.AddUnit(&player);
-    roundManager.AddUnit(&armurier);
-    roundManager.NewRound();
-    roundManager.DisplayRoundlist();
-    player.UseAbility(heal);*/
-    player.Init();
+    
+    //roundManager.DisplayRoundlist();
+    //player.UseAbility(heal);
+   
     
    
 
 
     
+}
+
+void InitPlayer(Unit& choosenUnit) {
+    int playerChoice;
+    string playerName;
+    cout << "what's your name traveller ?";
+    cin >> playerName;
+    cout << "hello " << playerName << " Nice to meet you\n";
+
+    cout << "please select your classe with the corresponding number" << endl;
+    cout << "1 :warrior\n 2 :Wizard\n 3 :Rogue\n" << endl;
+    cin >> playerChoice;
+    switch(playerChoice)
+    {
+    case 1:
+        choosenUnit = Unit(playerName, 30, 5, 20, 12, 18, 8, 10, 12, UnitType::Ally);
+        player.DisplaySumUp();
+        break;
+    case 2:
+        choosenUnit = Unit(playerName, 15, 20, 6, 14, 10, 20, 18, 8, UnitType::Ally);
+        player.DisplaySumUp();
+        break;
+    case 3:
+        choosenUnit = Unit(playerName, 20, 10, 14, 20, 14, 12, 12, 8, UnitType::Ally);
+        player.DisplaySumUp();
+    default:
+        cout << "you haven't choose a good number please select a unmber between 1 and 3" << endl;
+        InitPlayer(choosenUnit);
+        break;
+    }
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage

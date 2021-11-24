@@ -9,7 +9,7 @@ class RoundManager;
 class Unit {
 public:
 	Unit();
-	Unit(std::string name, int maxHp, int str, int dex, int cons, int intel, int wis, int cha, std::uint8_t unitType=0);
+	Unit(std::string name, int maxHp,int maxMp, int str, int dex, int cons, int intel, int wis, int cha, std::uint8_t unitType=0);
 	~Unit();
 private:
 	std::string mName;
@@ -34,6 +34,7 @@ private:
 
 	
 public:
+	
 	
 
 
