@@ -20,7 +20,7 @@ public:
 	~Item();
 
 	// getter
-
+	//virtual void Drop()=0;
 	float GetWeight();
 	int GetPrice();
 	std::string GetName();

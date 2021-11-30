@@ -12,19 +12,21 @@ RoundManager::RoundManager(){
 }
 RoundManager::~RoundManager(){}
 
-int RoundManager::GetCurrentUnit() {
-	return mCurrentUnit;
+
+int RoundManager::GetNbAllyUnit() {
+	return nbAllyUnit;
 }
-int RoundManager::GetNumberUnit() {
-	return mNumberUnit;
+int RoundManager::GetNbEnnemyUnit() {
+	return nbEnnemyUnit;
 }
-void RoundManager::SetCurrentUnit(int value) {
-	 mCurrentUnit = value;
-}
-void RoundManager::SetNumberUnit(int value) {
-	mNumberUnit = value;
-}
+
 void RoundManager::AddUnit(Unit* unit){
+	if (unit->GetUnitType() & UnitType::Ally) {
+		nbAllyUnit+=1;
+	}
+	if (unit->GetUnitType() & UnitType::Ennemie) {
+		nbEnnemyUnit+=1;
+	}
 	roundList.push_back(unit);
 }
 // elle eface par le nom de l'unité , si deux unite s'appelle pareil elle efface la premiere
@@ -60,5 +62,66 @@ void RoundManager::NewRound() {
 			// la Fonction vas juste trier avec l'oprateur< que j'ai surchargé pour trier des membre class Unit
 		sort(roundList.begin(), roundList.end());
 		
+	}
+}
+
+void RoundManager::PlayEncounter() {
+	int nbEnnemiesDead=0;
+	int nbAlliesDead=0;
+	bool haveEnnemy=false;
+	bool haveAlly=false;
+	bool endEncounter = false;
+	if (roundList.size() < 2) {
+		cout << "il n'y a pas asser de personne pour faire une Rencontre il faut etre deux" << endl;
+
+	}
+	for (int i = 0; i < roundList.size(); i++) {
+		if (roundList[i]->GetUnitType() == UnitType::Ennemie) {
+			haveEnnemy = true;
+		}
+		
+		if (roundList[i]->GetUnitType() == UnitType::Ally) {
+			haveAlly = true;
+		}
+
+	
+	}
+	
+	
+	if (haveEnnemy && haveAlly) {
+		NewRound();
+		while (!endEncounter) {
+			if (nbAlliesDead == nbAllyUnit) {
+				cout << " game over you dead" << endl;
+				endEncounter = true;
+				break;
+				
+			}
+			if (nbEnnemiesDead == nbEnnemyUnit) {
+				cout << "congratulation you win this battle" << endl;
+				endEncounter = true;
+				break;
+			}
+			else
+			{
+				nbAlliesDead = 0;
+				nbEnnemiesDead = 0;
+				for (int i = 0; i < roundList.size(); i++) {
+					if (roundList[i]->IsDead() == false && roundList[i]->havePlayedThisTurn() == false) {
+						roundList[i]->Play();
+					}
+					if (roundList[i]->IsDead() == true) {
+						if (roundList[i]->GetUnitType() & UnitType::Ally){
+							nbAlliesDead++;
+						}
+						if (roundList[i]->GetUnitType() & UnitType::Ennemie) {
+							nbEnnemiesDead++;
+						}
+					}
+				}
+			}
+			
+
+		}
 	}
 }

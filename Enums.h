@@ -25,7 +25,9 @@ namespace UnitType {
 	};
 }
 
-
+enum class ChooseSpellStateMachine {
+	Waiting,Init,DispSumUp
+};
 // version avec des map similaire abilitie
 enum class SupplyEffect {
 	Heal, majorHeal, Cure, Feed, Buff, Arcana, Debuff,

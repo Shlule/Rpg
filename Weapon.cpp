@@ -12,3 +12,6 @@ Weapon::Weapon(string name, int price, int weight, int damage, float range) :Ite
 
 Weapon::~Weapon() {};
 
+//void Drop() {
+//	cout << "that make a metallic sound" << endl;
+//}

@@ -10,42 +10,46 @@
 #include"Supply.h"
 #include"RoundManager.h"
 #include "Abilitie.h"
+#include"Enums.h"
 using namespace std;
 
 Unit player;
+vector<Abilitie> allAbilitie;
 void InitPlayer(Unit& choosenUnit);
+void InitPlayerSpellLearned(Unit& choosenUnit, int nbOfSpell);
+int CheckPlayerAnswer(int bornInf, int bornSup);
 
 int main()
 {
     //declarartion d'un roundManager
     RoundManager roundManager;
-    //InitPlayer(player);
-    
-    InitPlayer(player);
     
     
+   // InitPlayer(player);
+    
+    
 
 
 
 
-    Supply healingPotion = Supply("healing potion", 4, (EffectSupply::Heal|EffectSupply::Cure),1,8);
+    Supply healingPotion = Supply("healing potion", 4, (EffectSupply::Heal | EffectSupply::Cure),1,8);
     Abilitie explosion = Abilitie("explosion", map<Effect, int> { {Effect::Burn, 100}, { Effect::Blinded, 100 }}, 0, 4, 6, TargettingType::AllEnemie);
     Abilitie heal = Abilitie("heal ", map<Effect, int> { {Effect::Cure, 100}}, 0, 1, 6, TargettingType::OneAlly, AbilitieType::Heal);
+    Abilitie frostCone = Abilitie("frost Cone", map<Effect, int>{ {Effect::Freeze, 25}},0, 1, 10, TargettingType::OneEnnemie, AbilitieType::Offensive);
 
-    
+    // push abilitie in AllAbilitie vector
+    allAbilitie.push_back(explosion);
+    allAbilitie.push_back(heal);
+    allAbilitie.push_back(frostCone);
     // sett characters
     
     Unit* playerPtr = &player;
-    Unit gerard("Gerard", 10,5, 8, 6, 12, 9, 2, 18, UnitType::Ally);
+    Unit gerard("Gerard", 10, 5, 8, 6, 12, 9, 2, 18, UnitType::Ally);
     Mercant armurier("pascal",10,5,8,6,12,9,2,18,UnitType::Ennemie);
+
+
     Weapon longSword= Weapon("long Sword",20,20,20,12);
-     //on vas setter les point de vie des different personnages
-    player.SetMaxHp(20);
-    player.SetCurrentHp(15);
-    gerard.SetCurrentHp(20);
-    gerard.SetMaxHp(7);
-    armurier.SetMaxHp(20);
-    armurier.SetCurrentHp(20);
+     
      //on vas setter l'inventaire du marchand
     armurier.AddItem(Weapon("woodenstaff", 2, 1, 4, 1.5));
     armurier.AddItem(Item("cailloux", 1, 1, true, true));
@@ -59,15 +63,20 @@ int main()
     player.LearnAbilitie(explosion);
     player.LearnAbilitie(heal);
 
+    gerard.TakeDammage(10);
+    gerard.DisplayLife();
     // initialisation d'une rencontre
-    roundManager.AddUnit(&player);
+    //roundManager.AddUnit(&player);
     roundManager.AddUnit(&armurier);
     roundManager.AddUnit(&gerard);
+    
     roundManager.NewRound();
+    cout << roundManager.GetNbAllyUnit() << endl;
 
    
-    player.UseAbility(heal);
-    //healingPotion.GetEffect();
+    //player.UseAbility(heal);
+   // InitPlayerSpellLearned(player,2);
+   roundManager.PlayEncounter();
     
 
    
@@ -124,21 +133,95 @@ void InitPlayer(Unit& choosenUnit) {
     switch(playerChoice)
     {
     case 1:
-        choosenUnit = Unit(playerName, 30, 5, 20, 12, 18, 8, 10, 12, UnitType::Ally);
+        choosenUnit = Unit(playerName, 30, 5, 20, 12, 18, 8, 10, 12, UnitType::Ally|UnitType::Player);
         player.DisplaySumUp();
         break;
     case 2:
-        choosenUnit = Unit(playerName, 15, 20, 6, 14, 10, 20, 18, 8, UnitType::Ally);
+        choosenUnit = Unit(playerName, 15, 20, 6, 14, 10, 20, 18, 8, UnitType::Ally|UnitType::Player);
         player.DisplaySumUp();
         break;
     case 3:
-        choosenUnit = Unit(playerName, 20, 10, 14, 20, 14, 12, 12, 8, UnitType::Ally);
+        choosenUnit = Unit(playerName, 20, 10, 14, 20, 14, 12, 12, 8, UnitType::Ally|UnitType::Player);
         player.DisplaySumUp();
     default:
         cout << "you haven't choose a good number please select a unmber between 1 and 3" << endl;
         InitPlayer(choosenUnit);
         break;
     }
+}
+
+void InitPlayerSpellLearned(Unit& choosenUnit, int nbOfSpell) {
+    ChooseSpellStateMachine actualState = ChooseSpellStateMachine::Init;
+    int spellRemaining = nbOfSpell;
+    int playerChoice;
+    int abilitieIndex;
+
+    cout << "you can choose " << nbOfSpell << " spell from the following list" << endl;
+
+    while(spellRemaining>0) {
+        
+             if (actualState == ChooseSpellStateMachine::Init) {
+                 cout << "please select your spell, entering the corresponding number" << endl;
+                 cout << spellRemaining << " remaining" << endl;
+                 
+                 for (int i = 0; i < allAbilitie.size(); i++) {
+                     cout << i + 1 << " :" << allAbilitie[i].GetName() << endl;
+                 }
+                 playerChoice=CheckPlayerAnswer(1, allAbilitie.size());
+                 abilitieIndex = playerChoice - 1;
+                 cout << playerChoice << endl;
+                 allAbilitie[abilitieIndex].DisplayAbilitieSumUp();
+                 cout << "1 :Return\n 2 :Learn\n" << endl;
+                 playerChoice = CheckPlayerAnswer(1, 2);
+                 cout << playerChoice << endl;
+
+                 switch (playerChoice)
+                 {
+                 case 1:
+                     InitPlayerSpellLearned(choosenUnit, spellRemaining);
+                     break;
+                 case 2:
+                     cout << "are you sure to learn this spell ? \n1 :Yes\n2 :no\n";
+                     playerChoice = CheckPlayerAnswer(1, 2);
+                     switch (playerChoice)
+                     {
+                     case 1:
+                         choosenUnit.LearnAbilitie(allAbilitie[abilitieIndex]);
+                         cout << "congratulation you have learned " << allAbilitie[abilitieIndex].GetName() << endl;
+                         spellRemaining--;
+                         allAbilitie.erase(allAbilitie.begin() + abilitieIndex);
+                         abilitieIndex = 0;
+
+                         break;
+                     case 2:
+                         InitPlayerSpellLearned(choosenUnit, spellRemaining);
+
+                     default:
+                         break;
+                     }
+                     
+                 default:
+                     break;
+                 }
+                 
+
+        }
+    }
+
+}
+// this function include a cin>>
+int CheckPlayerAnswer(int bornInf, int bornSup) {
+    int playerChoice;
+    cin >> playerChoice;
+    if (playerChoice<bornInf || playerChoice>bornSup) {
+        cout << " please enter a number between " << bornInf << " and " << bornSup<<endl;
+        CheckPlayerAnswer(bornInf, bornSup);
+        
+    }
+    else {
+        return playerChoice;
+    }
+    
 }
 
 // Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage

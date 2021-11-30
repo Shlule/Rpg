@@ -51,3 +51,4 @@ bool Item::IsStackable() {
 void Item::InfoItem() {
 	cout << mName;
 }
+

@@ -24,7 +24,7 @@ Unit::Unit(string name, int maxHp,int maxMp, int str, int dex, int cons, int int
 
 }
 Unit::Unit() {
-	mDiceTwenty = Dice(20);
+	
 }
 
 Unit::~Unit() 
@@ -32,7 +32,22 @@ Unit::~Unit()
 	mInventory.~vector();
 };
 // Dice initialization
+// main fonction 
 
+void Unit::Play() {
+	if (mUnitType & UnitType::Player) {
+		cout << "a moi de jouer" << endl;
+	}
+	else if(mUnitType & UnitType::Ally)
+	{
+		cout << "je vais t'assister" << endl;
+	}
+	else
+	{
+		cout << "je vais te tapper" << endl;
+	}
+	
+}
 
 //getter
 
@@ -69,6 +84,12 @@ float Unit::GetBourse() {
 uint8_t Unit::GetUnitType() {
 	return mUnitType;
 }
+bool Unit::IsDead(){
+	return dead;
+}
+bool Unit::havePlayedThisTurn() {
+	return playedTurn;
+}
 void Unit::LearnAbilitie(Abilitie abilitie) {
 	mAbilitieLearned.push_back(abilitie);
 }
@@ -94,7 +115,7 @@ void Unit::SetUnitType(uint8_t unitType) {
 void Unit::DisplayAbilitieLearned() {
 	string tempName;
 	if (mAbilitieLearned.size() <= 0) {
-		cout << "l'inventaire est vide" << endl;
+		cout << "le spellBook est vide" << endl;
 	}
 	else {
 		for (int i = 0; i < mAbilitieLearned.size(); i++) {
@@ -133,8 +154,10 @@ void Unit::Heal(int points) {
 
 void Unit::TakeDammage(int damage) {
 	mCurrentHp = max((mCurrentHp - damage), 0);
+	cout << max((mCurrentHp-damage), 0) << endl;
 	if (mCurrentHp == 0) {
-		cout << "You're dead " << mName << '\n';
+		cout << mName <<" is dead"<< '\n';
+		dead = true;
 	}
 	else {
 		DisplayLife();
@@ -152,7 +175,7 @@ void Unit::DisplaySumUp() {
 }
 
 void Unit::DisplayLife() {
-	cout << mName << "has" << mCurrentHp << "life points\n";
+	cout << mName << " has " << mCurrentHp << " life points\n";
 
 }
 
@@ -290,6 +313,8 @@ int Unit::ResolutionAbilitieEffect(Abilitie& abilitie) {
 void Unit::UseAbility(Abilitie& abilitie) {
 	// je creer un vector qui contient toutes les unité concerne par le targetType de l'abilitie
 	vector<Unit*>& affectableUnits = GetAllUnitsFromType(abilitie.GetTargetType());
+
+	cout << affectableUnits.size() << endl;
 	// je regarde Le TagetType de l'abilité
 	// si le TargetType est OneEnnemie  Je dois choisir un Element dans affectableUnits
 	if (abilitie.GetTargetType()== TargettingType::OneAlly || abilitie.GetTargetType() == TargettingType::MeAndOneAlly || abilitie.GetTargetType() == TargettingType::OneEnnemie || abilitie.GetTargetType() == TargettingType::OneUnit){

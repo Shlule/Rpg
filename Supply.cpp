@@ -12,45 +12,59 @@ Supply::Supply(std::string name, int price, uint8_t effects , int diceCount, int
 Supply::~Supply() {};
 
 
+// si je veux plusieyrur tage pas possible de le faire dans un switch regarde diapo68 de New concept c++
+void Supply::ResolutionSupplyEffect() {
+	uint8_t effectSupply = GetEffect();
+	while (effectSupply != 0) {
+		if (effectSupply & EffectSupply::Heal) {
+			cout << "Heal" << endl;
+			effectSupply^= EffectSupply::Heal;
 
-int Supply::ResolutionSupplyEffect(uint8_t effectSupply) {
-	switch (effectSupply)
-	{
-	case EffectSupply::Heal:
-		cout << "heal" << endl;
-		return 0;
-		break;
-	case EffectSupply::MajorHeal:
-		cout << "heal" << endl;
-		return 1;
-		break;
-	case EffectSupply::Feed:
-		cout << "heal" << endl;
-		return 2;
-		break;
-	case EffectSupply::Buff:
-		cout << "heal" << endl;
-		break;
-	case EffectSupply::Debuff:
-		cout << "heal" << endl;
-		return 3;
-		break;
-	case EffectSupply::Cure:
-		cout << "heal" << endl;
-		return 4;
-		break;
-	case EffectSupply::Arcana:
-		cout << "heal" << endl;
-		return 5;
-		break;
-
-	default:
-		cout << "je ne marche pas" << endl;
-		return 6;
-		break;
+		}
+		else if (effectSupply & EffectSupply::Cure) {
+			cout << "Cure" << endl;
+			effectSupply^= EffectSupply::Cure;
+		}
+		else if (effectSupply & EffectSupply::Buff)
+		{
+			cout << "Buff" << endl;
+			effectSupply^= EffectSupply::Buff;
+		}
+		else if (effectSupply & EffectSupply::Debuff)
+		{
+			cout << "Debuff" << endl;
+			effectSupply^= EffectSupply::Debuff;
+		}
+		else if (effectSupply & EffectSupply::Arcana)
+		{
+			cout << "Arcana" << endl;
+			effectSupply^= EffectSupply::Arcana;
+		}
+		else if (effectSupply & EffectSupply::Feed)
+		{
+			cout << "Feed" << endl;
+			effectSupply^= EffectSupply::Feed;
+		}
+		else if (effectSupply & EffectSupply::MajorHeal)
+		{
+			cout << "Major Heal" << endl;
+			effectSupply^= EffectSupply::MajorHeal;
+		}
+		else {
+			cout << "je ne fais rien" << endl;
+		}
 	}
-	
 }
+
+void Supply::RemoveSupplyEffect() {
+	mSupplyEffects ^= EffectSupply::Heal;
+	cout << (int)mSupplyEffects << endl;
+}
+	
+
+//void Drop(){ 
+//	cout << "the potion cracke on the ground" << endl;
+//}
 
 
 
@@ -76,6 +90,5 @@ void Supply::SetEffect(uint8_t effect){
 
 }
 uint8_t Supply::GetEffect() {
-	cout << (int)mSupplyEffects;
 	return mSupplyEffects;
 }

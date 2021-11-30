@@ -4,22 +4,25 @@
 #include<string>
 class RoundManager
 {
+private:
+	
+	int nbEnnemyUnit=0;
+	int nbAllyUnit=0;
+
 public:
 	//constructor and destructor
 	RoundManager();
 	~RoundManager();
-	int GetCurrentUnit();
-	int GetNumberUnit();
-	void SetCurrentUnit(int value);
-	void SetNumberUnit(int value);
+
+	int GetNbAllyUnit();
+	int GetNbEnnemyUnit();
 	void NewRound();
 	void AddUnit(Unit* unit);
 	void DisplayRoundlist();
 	void RemoveUnit(std::string unit);
+	void PlayEncounter();
 	static std::vector<Unit*> roundList;
-private:
-	int mCurrentUnit;
-	int mNumberUnit;
+
 	
 };
 

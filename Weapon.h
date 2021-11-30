@@ -4,8 +4,7 @@ enum class WeaponType {
 	SWORD,KNIFE,AXE,BOW,STAFF
 };
 
-class Weapon : public Item
-{
+class Weapon : public Item{
 private:
 	WeaponType mType;
 	int mDamage;

@@ -9,23 +9,23 @@ class RoundManager;
 class Unit {
 public:
 	Unit();
-	Unit(std::string name, int maxHp,int maxMp, int str, int dex, int cons, int intel, int wis, int cha, std::uint8_t unitType=0);
+	Unit(std::string name, int maxHp, int maxMp, int str, int dex, int cons, int intel, int wis, int cha, std::uint8_t unitType = 0);
 	~Unit();
 private:
 	std::string mName;
-	bool dead=false;
-	int mMaxHp=1;
-	int mMoney=1;
-	int mCurrentHp=1;
-	int mMaxMp=1;
-	int mCurrentMp=1;
-	float bourse=1;
-
+	int mMaxHp;
+	int mMoney;
+	int mCurrentHp;
+	int mMaxMp;
+	int mCurrentMp;
+	float bourse;
+	bool dead = false;
+	bool playedTurn = false;
 	int mStrenth, mConstitution, mDexterity, mIntelligence, mWisdom, mCharisma;
 	std::uint8_t mUnitType;
 
 	void Heal(int points);
-	void levelUp();
+	
 	std::vector<Abilitie> mAbilitieLearned;
 	std::vector<Item> mInventory;
 	std::map<ResistanceType, int> mResistance;
@@ -39,11 +39,16 @@ public:
 
 
 	bool operator<(Unit& other);
+
+	// main fonction
+
+	void Play();
 	
 	
 
 	// get variable
-
+	bool havePlayedThisTurn();
+	bool IsDead();
 	float GetBourse();
 	std::string GetName();
 	int GetStrength();
@@ -52,7 +57,6 @@ public:
 	int GetIntelligence();
 	int GetWisdom();
 	int GetCharisma();
-	bool GetDead();
 	int GetMaxHp();
 	int GetCurrentHp();
 	int GetMaxMp();
@@ -89,7 +93,6 @@ public:
 	int RollInitiative(Dice de);
 
 	void TakeDammage(int damage);
-	void isDead();
 	void basicAttack(int damage);
 	void AddItem(Item item);
 

@@ -17,9 +17,10 @@ public:
 	~Supply();
 	int SupplyHeal(int diceCount, int diceFaces);
 	int SupplyDamage(int diceCount, int diceFaces);
-	int ResolutionSupplyEffect(uint8_t supplyEffect);
+	void ResolutionSupplyEffect();
 	void SetEffect(std::uint8_t effect);
 	std::uint8_t GetEffect();
+	void RemoveSupplyEffect();
 
 private:
 	int mDiceCount;
