@@ -2,6 +2,7 @@
 #include<iostream>
 #include<vector>
 #include "RoundManager.h"
+
 using namespace std;
 typedef std::map<Effect, int>::iterator it_type;
 
@@ -36,7 +37,56 @@ Unit::~Unit()
 
 void Unit::Play() {
 	if (mUnitType & UnitType::Player) {
-		cout << "a moi de jouer" << endl;
+		int playerChoice;
+		Abilitie abilitieChoice;
+		cout << "please select an action\n1 :Basic Attack\n2 :Use Abilities\n3 :Use Supply"<<endl;
+		playerChoice = CheckChoice(1, 3);
+		switch (playerChoice)
+		{
+		case 1:
+			BasicAttack(2, 8);
+			break;
+		case 2:
+			cout << "please select abilitie" << endl;
+			for (int i = 0; i < mAbilitieLearned.size(); i++) {
+				cout << i + 1 << " :" << mAbilitieLearned[i].GetName() << endl;
+			}
+			// demande au player qu'elle sort lancer
+			playerChoice = CheckChoice(1, mAbilitieLearned.size());
+			abilitieChoice = mAbilitieLearned[playerChoice - 1];
+			cout << " Are you sure to Use This?\n1 :Yes\n2 : No";
+			playerChoice = CheckChoice(1, 2);
+			if (playerChoice == 1) {
+				UseAbility(abilitieChoice);
+			}
+			else
+			{
+				Play();
+			}
+			break;
+		case 3:
+			cout << "please select Supply" << endl;
+			for (int i = 0; i < mInventory.size(); i++) {
+				cout << i + 1 << " :" << mInventory[i].GetName() << endl;
+			}
+			// demande au player qu'elle sort lancer
+			playerChoice = CheckChoice(1, mInventory.size());
+			cout << " Are you sure to Use This?\n1 :Yes\n2 : No";
+			playerChoice = CheckChoice(1, 2);
+			if (playerChoice == 1) {
+				UseSupply(mInventory[playerChoice - 1]);
+				RemoveItem(mInventory[playerChoice - 1].GetName());
+			}
+			else
+			{
+				Play();
+			}
+			break;
+			break;
+		default:
+			break;
+		}
+
 	}
 	else if(mUnitType & UnitType::Ally)
 	{
@@ -45,6 +95,20 @@ void Unit::Play() {
 	else
 	{
 		cout << "je vais te tapper" << endl;
+	}
+	
+}
+int Unit::CheckChoice(int bornInf, int bornSup){
+	int playerChoice;
+	cin >> playerChoice;
+	if (playerChoice<bornInf || playerChoice>bornSup) {
+		cout << " please enter a number between " << bornInf << " and " << bornSup << endl;
+		CheckChoice(bornInf, bornSup);
+
+	}
+	else {
+		
+		return playerChoice;
 	}
 	
 }
@@ -146,10 +210,30 @@ bool Unit::operator<(Unit& other) {
 // Game fonction
 
 // permet de soigner l'unite elle meme ou  une autre unite
+void Unit::BasicAttack(int diceCount , int diceFaces) {
+	int totalDamage=0;
+	int playerChoice;
+	vector<Unit*> affectableUnits = GetAllUnitsFromType(TargettingType::OneEnnemie);
+	Dice tempDice(diceFaces);
+	for (int i = 0; i < diceCount; i++) {
+		totalDamage += tempDice.roll();
+	}
 
-void Unit::Heal(int points) {
-	mCurrentHp = min((mCurrentHp + points), mMaxHp);
-	DisplayLife();
+	for (int i = 0; i < affectableUnits.size(); i++) {
+		cout << i + 1 << " :" << affectableUnits[i]->GetName();
+	}
+	playerChoice = CheckChoice(1, affectableUnits.size());
+	affectableUnits[playerChoice - 1]->TakeDammage(totalDamage);
+
+}
+void Unit::Heal(int heal) {
+	if (mCurrentHp + heal > mMaxHp) {
+		mCurrentHp = mMaxHp;
+	}
+	else {
+		mCurrentHp += heal;
+
+	}
 }
 
 void Unit::TakeDammage(int damage) {
@@ -181,7 +265,7 @@ void Unit::DisplayLife() {
 
 // item manager
 
-void Unit::AddItem(Item item) {
+void Unit::AddItem(Supply item) {
 	mInventory.push_back(item);
 }
 
@@ -265,19 +349,19 @@ int Unit::RollInitiative(Dice de) {
 bool Unit::IsKnowedAbilitie(string abilitie) {
 	for (int i = 0; i < mAbilitieLearned.size(); i++) {
 		if (abilitie == mAbilitieLearned[i].GetName()) {
-			cout << "je suis connu" << endl;
 			return true;	
 		}
 		else {
 			return false;
-			cout << "je ne connais pas ce sort" << endl;
 		}
 	}
 }
-
+// this function Make the resolution of an abilitie return the total value of an heal or total value of damage
 int Unit::AbilitieResolution(Abilitie& abilitie) {
 	// testing if abilitie is know or current mp > manacost
 	if (IsKnowedAbilitie(abilitie.GetName()) == false || mCurrentMp < abilitie.GetManacost()) {
+		// normalement le seul ca ou c'est vrai n'est que qunad le player a plus de mana.
+		cout << " je n'ai plus de mana" << endl;
 		return-1;
 	}
 	else {
@@ -311,31 +395,62 @@ int Unit::ResolutionAbilitieEffect(Abilitie& abilitie) {
 }
 
 void Unit::UseAbility(Abilitie& abilitie) {
+	int playerChoice;
 	// je creer un vector qui contient toutes les unité concerne par le targetType de l'abilitie
-	vector<Unit*>& affectableUnits = GetAllUnitsFromType(abilitie.GetTargetType());
-
-	cout << affectableUnits.size() << endl;
-	// je regarde Le TagetType de l'abilité
+	vector<Unit*> affectableUnits = GetAllUnitsFromType(abilitie.GetTargetType());
+	// je regarde si le sort est offensif ou pas
+	if (abilitie.GetAbilitieType() == AbilitieType::Offensive) {
+		// je regarde Le TagetType de l'abilité
 	// si le TargetType est OneEnnemie  Je dois choisir un Element dans affectableUnits
-	if (abilitie.GetTargetType()== TargettingType::OneAlly || abilitie.GetTargetType() == TargettingType::MeAndOneAlly || abilitie.GetTargetType() == TargettingType::OneEnnemie || abilitie.GetTargetType() == TargettingType::OneUnit){
-		cout << "choisi une cible" << endl;
-		for (int i = 0; i < affectableUnits.size(); i++) {
-			cout << "caca" << endl;
+		if (abilitie.GetTargetType() == TargettingType::OneAlly || abilitie.GetTargetType() == TargettingType::MeAndOneAlly || abilitie.GetTargetType() == TargettingType::OneEnnemie || abilitie.GetTargetType() == TargettingType::OneUnit) {
+			cout << "choisi une cible" << endl;
+			for (int i = 0; i < affectableUnits.size(); i++) {
+				cout << i + 1 << " :" << affectableUnits[i]->GetName();
+			}
+			playerChoice = CheckChoice(1, affectableUnits.size());
+			affectableUnits[playerChoice-1]->TakeDammage(AbilitieResolution(abilitie));
+			mCurrentMp -= abilitie.GetManacost();
 		}
+		else {
+			for (int i = 0; i < affectableUnits.size(); i++) {
+				affectableUnits[i]->TakeDammage(AbilitieResolution(abilitie));
+				mCurrentMp -= abilitie.GetManacost();
 
+			}
+
+		}
 	}
+	else
+	{
+		// je regarde Le TagetType de l'abilité
+	// si le TargetType est OneEnnemie  Je dois choisir un Element dans affectableUnits
+		if (abilitie.GetTargetType() == TargettingType::OneAlly || abilitie.GetTargetType() == TargettingType::MeAndOneAlly || abilitie.GetTargetType() == TargettingType::OneEnnemie || abilitie.GetTargetType() == TargettingType::OneUnit) {
+			cout << "choisi une cible" << endl;
+			for (int i = 0; i < affectableUnits.size(); i++) {
+				cout << i + 1 << " :" << affectableUnits[i]->GetName();
+			}
+			playerChoice = CheckChoice(1, affectableUnits.size());
+			affectableUnits[playerChoice-1]->Heal(AbilitieResolution(abilitie));
+			mCurrentMp -= abilitie.GetManacost();
+		}
+		else {
+			for (int i = 0; i < affectableUnits.size(); i++) {
+				affectableUnits[i]->Heal(AbilitieResolution(abilitie));
+				mCurrentMp -= abilitie.GetManacost();
+
+			}
+
+		}
+	}
+	
+	
 	// pareil pour TargetType OneAlly and OneUnit, MeAndOneAlly 
 	//creer une fonction qui permet de selection une unité dans le vecteur
 	//Resoude l'abilité sur la target choisi
-	//Sinon Resoudre l'abilitie Sur tout le vecteur affectableUnits
-	
-
-
-	
-	
+	//Sinon Resoudre l'abilitie Sur tout le vecteur affectableUnits	
 }
 // permet de stocker dans une vector<Unit*> tout les Unite qui peuvent etre cible par le Targetting Type de l'abilitté ou supply
-vector<Unit*>& Unit::GetAllUnitsFromType(TargettingType type) {
+vector<Unit*> Unit::GetAllUnitsFromType(TargettingType type) {
 	vector<Unit*> units= RoundManager::roundList;
 	vector<Unit*> compatibleUnits;
 	uint8_t mask;
@@ -349,7 +464,7 @@ vector<Unit*>& Unit::GetAllUnitsFromType(TargettingType type) {
 			mask = UnitType::Ennemie;
 			break;
 		case TargettingType::AllExceptMe:
-			mask = 256^UnitType::Player;
+			mask = UnitType::Aberation| UnitType::Ally| UnitType::Beast| UnitType::Celeste| UnitType::Ennemie| UnitType::Fielon| UnitType::Mecha;
 			break;
 		case TargettingType::MeAndOneAlly:
 			mask = UnitType::Player | UnitType::Ally;
@@ -361,7 +476,7 @@ vector<Unit*>& Unit::GetAllUnitsFromType(TargettingType type) {
 			mask = UnitType::Ennemie;
 			break;
 		case TargettingType::OneUnit:
-			mask = 0;
+			mask = 256;
 			break;
 		default:
 		break;

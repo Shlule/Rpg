@@ -9,6 +9,7 @@ class Abilitie
 {
 public:
 	//constructor and destructor
+	Abilitie();
 	Abilitie(std::string name , std::map<Effect, int> effects,int manacost, int diceCount = 0, int diceFaces = 6, TargettingType targetType = TargettingType::AllExceptMe, AbilitieType abilitieType = AbilitieType::Offensive);
 	~Abilitie();
 	

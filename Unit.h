@@ -5,8 +5,9 @@
 #include"Supply.h"
 #include <string>
 #include <vector>
+#include"ICheck.h"
 class RoundManager;
-class Unit {
+class Unit : public ICheck {
 public:
 	Unit();
 	Unit(std::string name, int maxHp, int maxMp, int str, int dex, int cons, int intel, int wis, int cha, std::uint8_t unitType = 0);
@@ -24,10 +25,11 @@ private:
 	int mStrenth, mConstitution, mDexterity, mIntelligence, mWisdom, mCharisma;
 	std::uint8_t mUnitType;
 
-	void Heal(int points);
+	int CheckChoice(int bornInf, int bornSup);
+
 	
 	std::vector<Abilitie> mAbilitieLearned;
-	std::vector<Item> mInventory;
+	std::vector<Supply> mInventory;
 	std::map<ResistanceType, int> mResistance;
 	Dice mDiceTwenty;
 	Dice mDiceHundred;
@@ -62,7 +64,7 @@ public:
 	int GetMaxMp();
 	int GetCurrentMp();
 	std::uint8_t GetUnitType();
-	std::vector<Unit*>& GetAllUnitsFromType(TargettingType type);
+	std::vector<Unit*> GetAllUnitsFromType(TargettingType type);
 	void UseAbility(Abilitie& abilitie);
 
 	
@@ -91,10 +93,10 @@ public:
 	// battle function 
 
 	int RollInitiative(Dice de);
-
+	void Heal(int heal);
 	void TakeDammage(int damage);
-	void basicAttack(int damage);
-	void AddItem(Item item);
+	void BasicAttack(int diceCount, int diceFaces);
+	void AddItem(Supply item);
 
 	// trade function
 	// buy and sell is in relation with Unit a

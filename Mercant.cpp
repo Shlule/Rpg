@@ -12,7 +12,7 @@ Mercant::Mercant() {}
 Mercant::~Mercant() {}
 
 // le marcahnt qui vend un item
-void Mercant::SellItem(Unit& buyer, Item item)
+void Mercant::SellItem(Unit& buyer, Supply item)
 {
 	float mercantPrice = item.GetPrice() + (item.GetPrice() * (coefTrade / 100));
 
@@ -27,7 +27,7 @@ void Mercant::SellItem(Unit& buyer, Item item)
 	}
 	
 }
-void Mercant::BuyItem(Unit& seller, Item item) {
+void Mercant::BuyItem(Unit& seller, Supply item) {
 	float mercantPrice = item.GetPrice() - (item.GetPrice() * (coefTrade / 100));
 
 	if (GetBourse() < mercantPrice) {

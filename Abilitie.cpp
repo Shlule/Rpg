@@ -5,6 +5,7 @@ typedef std::map<Effect, int>::iterator it_type;
 
 
 //constructor and destructor
+Abilitie::Abilitie() {}
 
 Abilitie::Abilitie(string name, std::map<Effect, int> effects ,int manacost, int diceCount, int diceFaces,TargettingType targetType , AbilitieType abilitieType ) {
 	mName = name;

@@ -23,8 +23,8 @@ public:
 	Mercant(std::string name, int maxHp, int maxMp, int str, int dex, int cons, int intel, int wis, int cha, std::uint8_t unitType);
 	~Mercant();
 
-	void SellItem(Unit& buyer, Item item);
-	void BuyItem(Unit& Seller, Item item);
+	void SellItem(Unit& buyer, Supply item);
+	void BuyItem(Unit& Seller, Supply item);
 
 };
 

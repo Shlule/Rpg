@@ -156,6 +156,7 @@
     <ClInclude Include="Classe.h" />
     <ClInclude Include="Dice.h" />
     <ClInclude Include="Enums.h" />
+    <ClInclude Include="ICheck.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Mercant.h" />
     <ClInclude Include="RoundManager.h" />

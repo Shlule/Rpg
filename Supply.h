@@ -13,6 +13,7 @@ class Supply : public Item
 {
 public:
 	// constructor and destructor
+	Supply();
 	Supply(std::string name, int price,uint8_t  effects,int diceCount,int diceFaces, int weight=0);
 	~Supply();
 	int SupplyHeal(int diceCount, int diceFaces);

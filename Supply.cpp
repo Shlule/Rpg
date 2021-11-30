@@ -2,6 +2,8 @@
 #include<iostream>
 
 using namespace std;
+Supply::Supply(){}
+
 
 Supply::Supply(std::string name, int price, uint8_t effects , int diceCount, int diceFaces, int weight) : Item(name, price, true ,true ,weight) {
 
